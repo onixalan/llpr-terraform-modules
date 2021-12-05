@@ -120,7 +120,7 @@ resource "google_logging_metric" "logging_metric_Storage_Permission_Changes" {
   project     = var.project_id
   name        = "StoragePermissionChanges/metric"
   description = "Logs Storage Permission Changes"
-  filter      = "resource.type=gcs_bucket AND protoPayload.methodName=\"storage.setIamPermissions\""
+  filter      = "resource.type=\"gcs_bucket\" AND protoPayload.methodName=\"storage.setIamPermissions\""
   metric_descriptor {
     metric_kind  = "DELTA"
     value_type   = "INT64"
@@ -194,7 +194,7 @@ resource "google_logging_metric" "logging_metric_VPC_Network_Changes" {
   project     = var.project_id
   name        = "VPCNetworkChanges/metric"
   description = "Logs VPC Network Changes - Insert/Patch/Delete/Peering"
-  filter      = "resource.type=gce_network AND jsonPayload.event_subtype=\"compute.networks.insert\" OR jsonPayload.event_subtype=\"compute.networks.patch\" OR jsonPayload.event_subtype=\"compute.networks.delete\" OR jsonPayload.event_subtype=\"compute.networks.removePeering\" OR jsonPayload.event_subtype=\"compute.networks.addPeering\""
+  filter      = "resource.type=\"gce_network\" AND jsonPayload.event_subtype=\"compute.networks.insert\" OR jsonPayload.event_subtype=\"compute.networks.patch\" OR jsonPayload.event_subtype=\"compute.networks.delete\" OR jsonPayload.event_subtype=\"compute.networks.removePeering\" OR jsonPayload.event_subtype=\"compute.networks.addPeering\""
   metric_descriptor {
     metric_kind  = "DELTA"
     value_type   = "INT64"
