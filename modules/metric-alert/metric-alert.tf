@@ -20,7 +20,7 @@ resource "google_logging_metric" "logging_metric_Audit_Configuration_Changes" {
   }
 }
 
-resource "google_monitoring_alert_policy" "alert_policy_custom_role" {
+resource "google_monitoring_alert_policy" "alert_audit_configuration_role" {
   project               = var.project_id
   display_name          = "Audit Configuration Changes Monitoring"
   combiner              = "OR"
