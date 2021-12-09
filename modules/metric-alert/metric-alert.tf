@@ -6,6 +6,47 @@ resource "google_monitoring_notification_channel" "notification_channel" {
     email_address = var.email_address
   }
 }
+
+resource "google_logging_metric" "logging_metric_Audit_Configuration_Changes" {
+  project     = var.project_id
+  name        = "AuditConfigurationChanges/metric"
+  description = "Ensure that the log metric filter and alerts exist for Audit Configuration changes"
+  filter      = "protoPayload.methodName=\"SetIamPolicy\" AND protoPayload.serviceData.policyDelta.auditConfigDeltas:*"
+  metric_descriptor {
+    metric_kind  = "DELTA"
+    value_type   = "INT64"
+    unit         = "1"
+    display_name = "Audit Configuration Changes"
+  }
+}
+
+resource "google_monitoring_alert_policy" "alert_policy_custom_role" {
+  project               = var.project_id
+  display_name          = "Audit Configuration Changes Monitoring"
+  combiner              = "OR"
+  notification_channels = [google_monitoring_notification_channel.notification_channel.name]
+  conditions {
+    display_name = "Audit Configuration Changes Monitoring [SUM]"
+    condition_threshold {
+      filter     = "metric.type=\"logging.googleapis.com/user/AuditConfigurationChanges/metric\" AND resource.type=\"global\""
+      duration   = "600s"
+      comparison = "COMPARISON_GT"
+      aggregations {
+        alignment_period   = "600s"
+        per_series_aligner = "ALIGN_COUNT"
+      }
+      trigger {
+        count   = 1
+        percent = 0
+      }
+    }
+  }
+  depends_on = [
+    google_logging_metric.logging_metric_Audit_Configuration_Changes,
+    google_monitoring_notification_channel.notification_channel
+  ]
+}
+
 resource "google_logging_metric" "logging_metric_Custom_Role_Changes" {
   project     = var.project_id
   name        = "CustomRoleChanges/metric"
@@ -40,7 +81,10 @@ resource "google_monitoring_alert_policy" "alert_policy_custom_role" {
       }
     }
   }
-  depends_on = [google_logging_metric.logging_metric_Custom_Role_Changes]
+  depends_on = [
+    google_logging_metric.logging_metric_Custom_Role_Changes,
+    google_monitoring_notification_channel.notification_channel
+  ]
 }
 
 resource "google_logging_metric" "logging_metric_Project_IAM_Changes" {
@@ -77,7 +121,10 @@ resource "google_monitoring_alert_policy" "alert_policy_project_iam_changes" {
       }
     }
   }
-  depends_on = [google_logging_metric.logging_metric_Project_IAM_Changes]
+  depends_on = [
+    google_logging_metric.logging_metric_Project_IAM_Changes,
+    google_monitoring_notification_channel.notification_channel
+  ]
 }
 
 resource "google_logging_metric" "logging_metric_SQL_Configuration_Changes" {
@@ -114,7 +161,10 @@ resource "google_monitoring_alert_policy" "alert_policy_sql_config_changes" {
       }
     }
   }
-  depends_on = [google_logging_metric.logging_metric_SQL_Configuration_Changes]
+  depends_on = [
+    google_logging_metric.logging_metric_SQL_Configuration_Changes,
+    google_monitoring_notification_channel.notification_channel
+  ]
 }
 resource "google_logging_metric" "logging_metric_Storage_Permission_Changes" {
   project     = var.project_id
@@ -150,7 +200,10 @@ resource "google_monitoring_alert_policy" "alert_policy_storage_permission_chang
       }
     }
   }
-  depends_on = [google_logging_metric.logging_metric_Storage_Permission_Changes]
+  depends_on = [
+    google_logging_metric.logging_metric_Storage_Permission_Changes,
+    google_monitoring_notification_channel.notification_channel
+  ]
 }
 
 resource "google_logging_metric" "logging_metric_VPC_Firewall_Rule_Changes" {
@@ -187,7 +240,10 @@ resource "google_monitoring_alert_policy" "alert_policy_vpc_firewall_rule_change
       }
     }
   }
-  depends_on = [google_logging_metric.logging_metric_VPC_Firewall_Rule_Changes]
+  depends_on = [
+    google_logging_metric.logging_metric_VPC_Firewall_Rule_Changes,
+    google_monitoring_notification_channel.notification_channel
+  ]
 }
 
 resource "google_logging_metric" "logging_metric_VPC_Network_Changes" {
@@ -224,7 +280,10 @@ resource "google_monitoring_alert_policy" "alert_policy_vpc_network_changes" {
       }
     }
   }
-  depends_on = [google_logging_metric.logging_metric_VPC_Network_Changes]
+  depends_on = [
+    google_logging_metric.logging_metric_VPC_Network_Changes,
+    google_monitoring_notification_channel.notification_channel
+  ]
 }
 
 resource "google_logging_metric" "logging_metric_VPC_Network_Route_Changes" {
@@ -261,5 +320,8 @@ resource "google_monitoring_alert_policy" "alert_policy_vpc_network_route_change
       }
     }
   }
-  depends_on = [google_logging_metric.logging_metric_VPC_Network_Route_Changes]
+  depends_on = [
+    google_logging_metric.logging_metric_VPC_Network_Route_Changes,
+    google_monitoring_notification_channel.notification_channel
+  ]
 }
