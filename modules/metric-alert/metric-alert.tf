@@ -22,7 +22,7 @@ resource "google_logging_metric" "log_metric_route" {
 }
 
 resource "google_monitoring_alert_policy" "alert_policy_route" {
-  project = google_project.shared_monitoring.project_id
+  project = var.project_id
   display_name = "Route Monitoring"
   combiner     = "OR"
   notification_channels = [google_monitoring_notification_channel.notification_channel.name]
@@ -61,7 +61,7 @@ resource "google_logging_metric" "log_metric_sql_instance" {
 }
 
 resource "google_monitoring_alert_policy" "alert_policy_sql_instance" {
-  project = google_project.shared_monitoring.project_id
+  project = var.project_id
   display_name = "SQL Instance Monitoring"
   combiner     = "OR"
   notification_channels = [google_monitoring_notification_channel.notification_channel.name]
@@ -88,7 +88,7 @@ resource "google_monitoring_alert_policy" "alert_policy_sql_instance" {
 }
 
 resource "google_logging_metric" "log_metric_network" {
-  project = google_project.shared_nw_prod.project_id
+  project = var.project_id
   name   = "network_monitoring/metric"
   filter = "resource.type=gce_network AND jsonPayload.event_subtype=\"compute.networks.insert\" OR jsonPayload.event_subtype=\"compute.networks.patch\" OR jsonPayload.event_subtype=\"compute.networks.delete\" OR jsonPayload.event_subtype=\"compute.networks.removePeering\" OR jsonPayload.event_subtype=\"compute.networks.addPeering\""
   metric_descriptor {
@@ -100,7 +100,7 @@ resource "google_logging_metric" "log_metric_network" {
 }
 
 resource "google_monitoring_alert_policy" "alert_policy_network" {
-  project = google_project.shared_monitoring.project_id
+  project = var.project_id
   display_name = "Network Monitoring"
   combiner     = "OR"
   notification_channels = [google_monitoring_notification_channel.notification_channel.name]
@@ -127,7 +127,7 @@ resource "google_monitoring_alert_policy" "alert_policy_network" {
 }
 
 resource "google_logging_metric" "log_metric_firewall" {
-  project = google_project.shared_nw_prod.project_id
+  project = var.project_id
   name   = "firewall_monitoring/metric"
   filter = "resource.type=\"gce_firewall_rule\" AND jsonPayload.event_subtype=\"compute.firewalls.patch\" OR jsonPayload.event_subtype=\"compute.firewalls.insert\""
   metric_descriptor {
@@ -139,7 +139,7 @@ resource "google_logging_metric" "log_metric_firewall" {
 }
 
 resource "google_monitoring_alert_policy" "alert_policy_firewall" {
-  project = google_project.shared_monitoring.project_id
+  project = var.project_id
   display_name = "Firewall Monitoring"
   combiner     = "OR"
   notification_channels = [google_monitoring_notification_channel.notification_channel.name]
@@ -178,7 +178,7 @@ resource "google_logging_metric" "log_metric_project_ownership" {
 }
 
 resource "google_monitoring_alert_policy" "alert_policy_project_ownership" {
-  project = google_project.shared_monitoring.project_id
+  project = var.project_id
   display_name = "Project Ownership Monitoring"
   combiner     = "OR"
   notification_channels = [google_monitoring_notification_channel.notification_channel.name]
@@ -217,7 +217,7 @@ resource "google_logging_metric" "log_metric_bucket_iam" {
 }
 
 resource "google_monitoring_alert_policy" "alert_policy_bucket_iam" {
-  project = google_project.shared_monitoring.project_id
+  project = var.project_id
   display_name = "Bucket IAM Monitoring"
   combiner     = "OR"
   notification_channels = [google_monitoring_notification_channel.notification_channel.name]
@@ -256,7 +256,7 @@ resource "google_logging_metric" "log_metric_audit_config" {
 }
 
 resource "google_monitoring_alert_policy" "alert_policy_audit_config" {
-  project = google_project.shared_monitoring.project_id
+  project = var.project_id
   display_name = "Audit Config Monitoring"
   combiner     = "OR"
   notification_channels = [google_monitoring_notification_channel.notification_channel.name]
@@ -295,7 +295,7 @@ resource "google_logging_metric" "log_metric_custom_role" {
 }
 
 resource "google_monitoring_alert_policy" "alert_policy_custom_role" {
-  project = google_project.shared_monitoring.project_id
+  project = var.project_id
   display_name = "Custom Role Monitoring"
   combiner     = "OR"
   notification_channels = [google_monitoring_notification_channel.notification_channel.name]
